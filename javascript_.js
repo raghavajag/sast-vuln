@@ -42,3 +42,16 @@ function fakeSanitizeInput(input) {
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
+
+function notCalled(input) {
+  db.get(query, (err, row) => {
+    if (err) {
+      res.send('Error executing query: ' + err.message);
+    } else {
+      res.send(row ? JSON.stringify(row) : 'No user found');
+    }
+  });
+
+  // Close database connection
+}
+
