@@ -14,6 +14,7 @@ def sanitize_input(user_input):
     Sanitizes input by allowing only alphanumeric characters.
     """
     return re.sub(r'[^a-zA-Z0-9]', '', user_input)
+
 def vuln_function():
     username = request.args.get('username')  # Clear source
     
@@ -50,3 +51,20 @@ def show_user():
     return str(user)
 
     
+@app.route('/new_route')
+def new_route():
+    username = request.args.get('user') 
+    
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    safe_input = sanitize_input(username)
+ 
+    # Vulnerable query construction
+    query = "SELECT * FROM users WHERE username = '" + safe_input + "'"
+    
+    # Execution
+    cursor.execute(query)  # Clear sink
+    
+    user = cursor.fetchone()
+    conn.close()
+    return str(user)
